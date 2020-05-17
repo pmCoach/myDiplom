@@ -21,7 +21,7 @@ class Discipline(models.Model):
     name_of_discipline = models.CharField(max_length = 50)
 
     def __str__(self):
-        return self.name_of_discipline
+        return str(self.name_of_discipline)
 
     def publish(self):
         self.save()
@@ -57,7 +57,7 @@ class Auditory(models.Model):
     number_of_auditory = models.IntegerField()
 
     def __str__(self):
-        return self.number_of_auditory
+        return str(self.number_of_auditory)
 
 
 
@@ -66,7 +66,7 @@ class Pair_number(models.Model):
     pair_number = models.IntegerField()
 
     def __str__(self):
-        return self.pair_number
+        return str(self.pair_number)
 
 
 
@@ -82,7 +82,8 @@ class Raspisanie(models.Model):
     auditory = models.ForeignKey(Auditory, on_delete = models.CASCADE)
 
     def __str__(self):
-        return self.discipline
+        str_new = "Группа: " + str(self.group) + " | " + str(self.discipline) + " | " + str(self.auditory) + " кабинет | Преподаватель: " + str(self.teacher)
+        return str_new
 
 
 
@@ -97,5 +98,5 @@ class Changes(models.Model):
     auditory = models.ForeignKey(Auditory, on_delete = models.CASCADE)
 
     def __str__(self):
-        return self.discipline
-    
+        str_new = str(self.date_of_change) + " | Группа: " + str(self.group) + " | " + str(self.discipline) + " | " + str(self.auditory) + " кабинет | Преподаватель: " + str(self.teacher)
+        return str_new
