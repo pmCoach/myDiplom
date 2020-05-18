@@ -5,6 +5,15 @@
     <title>Здесь будет выводиться расписание занятий</title>
   </head>
   <body>
-    <p>Здесь скоро выведется расписание занятий</p>
+    <h2>Выберите из списка вашу группу</h2>
+    <div class="">
+          {% for group in groups %}
+            <br>
+            <a value="" href="{% url 'view_raspis' group.kod_of_group %}">{{ group.group_name }}</a>
+          {% endfor %}
+    </div>
+
+
+
   </body>
 </html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Просмотр расписания</title>
+  </head>
+  <body>
+    <div class="">
+        {% for para in raspis %}
+          <p>{{para.discipline}}</p>
+          <p>{{para.teacher}}</p>
+          <p>{{para.pair_number}}</p>
+        {% endfor %}
+    </div>
+
+  </body>
+</html>
