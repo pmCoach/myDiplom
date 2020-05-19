@@ -5,8 +5,21 @@
     <title>Просмотр расписания</title>
   </head>
   <body>
-    <div class="" id="table">
-        {% for para in raspis %}
+    <div class="table" id="chetnoe">
+      <h2>Четная неделя</h2>
+        {% for para in chetnoe %}
+        <div class="para">
+          <p>{{para.discipline}}</p>
+          <p>{{para.teacher}}</p>
+          <p>{{para.pair_number}}</p>
+          <p>{{para.group.pk}}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="table" id="nechetnoe">
+      <h2>Нечетная неделя</h2>
+        {% for para in nechetnoe %}
         <div class="para">
           <p>{{para.discipline}}</p>
           <p>{{para.teacher}}</p>
@@ -16,8 +29,9 @@
         {% endfor %}
     </div>
     <div class="" id="zamena">
-      <a href="{% url 'view_changes' para.group.pk %}">Просмотреть замены</a>
+      <a href="{% url 'view_changes' group_n.group %}">Просмотреть замены</a>
     </div>
+
 
   </body>
 </html>

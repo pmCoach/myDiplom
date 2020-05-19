@@ -5,6 +5,14 @@
     <title></title>
   </head>
   <body>
+    {% for para in zamena %}
+      <div class="para">
+        <p>{{para.discipline}}</p>
+        <p>{{para.teacher}}</p>
+        <p>{{para.pair_number}}</p>
+        <p>{{para.group.pk}}</p>
+      </div>
+    {% endfor %}
     <p>произошел переход на страницу с переменами</p>
   </body>
 </html>
