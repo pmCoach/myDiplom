@@ -5,12 +5,18 @@
     <title>Просмотр расписания</title>
   </head>
   <body>
-    <div class="">
+    <div class="" id="table">
         {% for para in raspis %}
+        <div class="para">
           <p>{{para.discipline}}</p>
           <p>{{para.teacher}}</p>
           <p>{{para.pair_number}}</p>
+          <p>{{para.group.pk}}</p>
+        </div>
         {% endfor %}
+    </div>
+    <div class="" id="zamena">
+      <a href="{% url 'view_changes'  %}">Просмотреть замены</a>
     </div>
 
   </body>

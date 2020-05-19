@@ -14,3 +14,7 @@ def view_raspis(request, pk):
     groups = get_object_or_404(Group, kod_of_group=pk)
     raspis = Raspisanie.objects.filter(group=groups.kod_of_group)
     return render(request, 'user_raspisanie/view_raspisanie.html', {'raspis': raspis})
+
+
+def view_changes(request, pk=None):
+    return render(request, 'user_raspisanie/view_changes.html', {})
