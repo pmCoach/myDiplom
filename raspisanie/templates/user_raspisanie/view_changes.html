@@ -13,6 +13,6 @@
         <p>{{para.group.pk}}</p>
       </div>
     {% endfor %}
-    <p>произошел переход на страницу с переменами</p>
+    <a href="{% url 'view_raspis' group.group.pk %}">Вернуться на страницу с парами</a>
   </body>
 </html>

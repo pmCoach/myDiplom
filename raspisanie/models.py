@@ -69,6 +69,11 @@ class Pair_number(models.Model):
         return str(self.pair_number)
 
 
+class Start_semestr_date(models.Model):
+    kod_of_date = models.AutoField(primary_key = True)
+    date = models.DateField()
+
+
 
 class Raspisanie(models.Model):
     kod_of_raspisanie = models.AutoField(primary_key = True)
@@ -90,12 +95,13 @@ class Raspisanie(models.Model):
 
 class Changes(models.Model):
     kod_of_raspisanie = models.AutoField(primary_key = True)
-    day_of_week = models.ForeignKey(Day_of_week, on_delete = models.CASCADE)
     date_of_change = models.DateField()
+    pair_number = models.ForeignKey(Pair_number, on_delete = models.CASCADE)
     teacher = models.ForeignKey(Teacher, on_delete = models.CASCADE)
     discipline = models.ForeignKey(Discipline, on_delete = models.CASCADE)
     group = models.ForeignKey(Group, on_delete = models.CASCADE)
     auditory = models.ForeignKey(Auditory, on_delete = models.CASCADE)
+
 
     def __str__(self):
         str_new = str(self.date_of_change) + " | Группа: " + str(self.group) + " | " + str(self.discipline) + " | " + str(self.auditory) + " кабинет | Преподаватель: " + str(self.teacher)
