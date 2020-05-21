@@ -5,14 +5,17 @@
     <title></title>
   </head>
   <body>
-    {% for para in zamena %}
-      <div class="para">
-        <p>{{para.discipline}}</p>
-        <p>{{para.teacher}}</p>
-        <p>{{para.pair_number}}</p>
-        <p>{{para.group.pk}}</p>
-      </div>
-    {% endfor %}
+    <div class="raspis">
+      {% for para in zamena %}
+        <div class="para" style="border: 1px solid black">
+          <p>{{para.date_of_change}}</p>
+          <p>{{para.discipline}}</p>
+          <p>{{para.teacher}}</p>
+          <p>{{para.pair_number}}</p>
+          <p>{{para.group.pk}}</p>
+        </div>
+      {% endfor %}
+    </div>
     <a href="{% url 'view_raspis' group.group.pk %}">Вернуться на страницу с парами</a>
   </body>
 </html>

@@ -87,7 +87,7 @@ class Raspisanie(models.Model):
     auditory = models.ForeignKey(Auditory, on_delete = models.CASCADE)
 
     def __str__(self):
-        str_new = "Группа: " + str(self.group) + " | " + str(self.discipline) + " | " + str(self.auditory) + " кабинет | Преподаватель: " + str(self.teacher)
+        str_new = str(self.day_of_week) + " | Группа: " + str(self.group) + " | " + str(self.discipline) + " | " + str(self.auditory) + " кабинет | Преподаватель: " + str(self.teacher)
         return str_new
 
 
