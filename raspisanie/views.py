@@ -42,16 +42,15 @@ def view_raspis(request, pk):
     raspis = Raspisanie.objects.filter(group=groups.kod_of_group)
     group_name = raspis[0]
     week = Day_of_week.objects.filter()
-    chetnoe = raspis.filter(parity=True).order_by('pair_number')
-    nechetnoe = raspis.filter(parity=False).order_by('pair_number')
-    return render(request, 'user_raspisanie/view_raspisanie.html', {'raspis': raspis, 'group_n': group_name, 'chetnoe': chetnoe, 'nechetnoe': nechetnoe, 'week': week})
+    chetnoe = raspis.exclude(parity=False, obe_nedeli=False).order_by('pair_number')
+    nechetnoe = raspis.exclude(parity=True).order_by('pair_number')
+    return render(request, 'user_raspisanie/view_raspisanie.html', {'raspis': raspis, 'group_n': group_name, 'chetnoe': chetnoe, 'nechetnoe': nechetnoe, 'week': week,})
 
 
 
 def view_changes(request, gruppa):
     groups = get_object_or_404(Group, group_name=gruppa)
     date = datetime.date.today()
-    print('today', date)
     for change in Changes.objects.filter(group=groups.kod_of_group):
         if change.date_of_change < date:
             print('Данная дата меньше сегодняшней', change.date_of_change)
@@ -67,7 +66,24 @@ def raspis_today(request, pk):
     groups = get_object_or_404(Group, kod_of_group=pk)
     week_day = datetime.date.today().weekday()+1
     date = datetime.date.today()
-    raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day)
+    chetnost = False
+    start_sem = Start_semestr_date.objects.filter()
+    start_semestr_date = start_sem[0].date.isocalendar()[1]
+    print(start_semestr_date)
+    if start_semestr_date % 2 == 0:
+        if datetime.date.today().isocalendar()[1] % 2 == 1:
+            chetnost = True
+        else:
+            chetnost = False
+    else:
+        if datetime.daate.today().isocalendar()[1] % 2 == 1:
+            chetnost = False
+        else:
+            chetnost = True
+    if chetnost == True:
+        raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=False, obe_nedeli=False)
+    else:
+        raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=True)
     zamena = Changes.objects.filter(group=groups.kod_of_group, date_of_change=date)
     check = False
     dopoln_para = [[]]
@@ -75,9 +91,6 @@ def raspis_today(request, pk):
     discipline = []
     teacher = []
     auditory = []
-    print(date)
-    print(zamena[0].date_of_change)
-    print('День недели', week_day)
     for para in raspis:
         for zam in zamena:
             if para.pair_number == zam.pair_number:
@@ -91,24 +104,16 @@ def raspis_today(request, pk):
                 check = True
                 break
         if check == False:
-            print("Замена, которая должна добавиться ", zam, '    ', zam.pair_number)
             pair_number.append(zam.pair_number)
             discipline.append(zam.discipline)
             teacher.append(zam.teacher)
             auditory.append(zam.auditory)
     for i in range(len(pair_number)):
-        print(pair_number[i])
-        print(discipline[i])
-        print(teacher[i])
-        print(auditory[i])
         for j in range(len(discipline)):
             dopoln_para[i].append(pair_number[i])
             dopoln_para[i].append(discipline[i])
             dopoln_para[i].append(teacher[i])
             dopoln_para[i].append(auditory[i])
-    for i in dopoln_para:
-        for j in i:
-            print(j)
     return render(request, 'user_raspisanie/raspis_today.html', {'raspis': raspis, 'dop_para': dopoln_para,})
 
 
@@ -118,7 +123,24 @@ def raspis_tom(request, pk):
     week_day = datetime.date.today().weekday()+2
     date = datetime.date.today()
     date += datetime.timedelta(days=1)
-    raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day)
+    chetnost = False
+    start_sem = Start_semestr_date.objects.filter()
+    start_semestr_date = start_sem[0].date.isocalendar()[1]
+    print(start_semestr_date)
+    if start_semestr_date % 2 == 0:
+        if datetime.date.today().isocalendar()[1] % 2 == 1:
+            chetnost = True
+        else:
+            chetnost = False
+    else:
+        if datetime.daate.today().isocalendar()[1] % 2 == 1:
+            chetnost = False
+        else:
+            chetnost = True
+    if chetnost == True:
+        raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=False, obe_nedeli=False)
+    else:
+        raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=True)
     zamena = Changes.objects.filter(group=groups.kod_of_group, date_of_change=date)
     check = False
     dopoln_para = [[]]
@@ -126,9 +148,6 @@ def raspis_tom(request, pk):
     discipline = []
     teacher = []
     auditory = []
-    print(date)
-    print(zamena[0].date_of_change)
-    print('День недели', week_day)
     for para in raspis:
         for zam in zamena:
             if para.pair_number == zam.pair_number:
@@ -142,22 +161,14 @@ def raspis_tom(request, pk):
                 check = True
                 break
         if check == False:
-            print("Замена, которая должна добавиться ", zam, '    ', zam.pair_number)
             pair_number.append(zam.pair_number)
             discipline.append(zam.discipline)
             teacher.append(zam.teacher)
             auditory.append(zam.auditory)
     for i in range(len(pair_number)):
-        print(pair_number[i])
-        print(discipline[i])
-        print(teacher[i])
-        print(auditory[i])
         for j in range(len(discipline)):
             dopoln_para[i].append(pair_number[i])
             dopoln_para[i].append(discipline[i])
             dopoln_para[i].append(teacher[i])
             dopoln_para[i].append(auditory[i])
-    for i in dopoln_para:
-        for j in i:
-            print(j)
-    return render(request, 'user_raspisanie/raspis_tomorrow.html', {'raspis': raspis, 'dop_para': dopoln_para,})
+    return render(request, 'user_raspisanie/raspis_tomorrow.html', {'raspis': raspis, 'dop_para': dopoln_para, 'chetnost': chetnost})

@@ -64,6 +64,8 @@ class Auditory(models.Model):
 class Pair_number(models.Model):
     kod_of_pair = models.AutoField(primary_key = True)
     pair_number = models.IntegerField()
+    pair_start = models.TimeField()
+    pair_end = models.TimeField()
 
     def __str__(self):
         return str(self.pair_number)
@@ -73,12 +75,15 @@ class Start_semestr_date(models.Model):
     kod_of_date = models.AutoField(primary_key = True)
     date = models.DateField()
 
-
+    def __str__(self):
+        data = str(self.date)
+        return data
 
 class Raspisanie(models.Model):
     kod_of_raspisanie = models.AutoField(primary_key = True)
     day_of_week = models.ForeignKey(Day_of_week, on_delete = models.CASCADE)
     parity = models.BooleanField()
+    obe_nedeli = models.BooleanField()
     discipline = models.ForeignKey(Discipline, on_delete = models.CASCADE)
     group = models.ForeignKey(Group, on_delete = models.CASCADE)
     #Данное поле предназначено для заполнения с какой пары начинается дисциплина
