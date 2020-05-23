@@ -1,57 +1,65 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/raspisanie.css' %}">
     <title>{{group_n.group}}</title>
   </head>
   <body>
-    <h1>{{group_n.group}}</h1>
+    <center><h1>{{group_n.group}}</h1></center>
     <div class="raspis" id="chetnoe" >
       <h2>Четная неделя</h2>
       {% for week_day in week %}
         <h3>{{week_day}}</h3>
         {% for para in chetnoe %}
         {% if week_day == para.day_of_week %}
-        <div class="para" style="border: 1px solid black">
-          <p>{{para.discipline}}</p>
-          <p>{{para.teacher}}</p>
-          <p>{{para.pair_number.pair_start}} - {{para.pair_number.pair_end}}</p>
-          <p>{{para.auditory}}</p>
-          <p>{{para.group.pk}}</p>
-          <p>{{para.day_of_week}}</p>
+        <div class="para">
+          <center>
+            <p>{{para.pair_number.pair_start}} - {{para.pair_number.pair_end}}</p>
+          </center>
+            <p>Дисциплина: {{para.discipline}}</p>
+            <p>Преподаватель: {{para.teacher}}</p>
+            <p>Аудитория: {{para.auditory}}</p>
         </div>
         {% endif %}
         {% endfor %}
       {% endfor %}
     </div>
-
     <div class="raspis" id="nechetnoe">
+
       <h2>Нечетная неделя</h2>
       {% for week_day in week %}
         <h3>{{week_day}}</h3>
         {% for para in nechetnoe %}
         {% if week_day == para.day_of_week %}
-        <div class="para" style="border: 1px solid black">
-          <p>{{para.discipline}}</p>
-          <p>{{para.teacher}}</p>
-          <p>{{para.pair_number.pair_start}} - {{para.pair_number.pair_end}}</p>
-          <p>{{para.auditory}}</p>
-          <p>{{para.group.pk}}</p>
-          <p>{{para.day_of_week}}</p>
+        <div class="para">
+          <center>
+            <p>{{para.pair_number.pair_start}} - {{para.pair_number.pair_end}}</p>
+          </center>
+            <p>Дисциплина: {{para.discipline}}</p>
+            <p>Преподаватель: {{para.teacher}}</p>
+            <p>Аудитория: {{para.auditory}}</p>
         </div>
         {% endif %}
         {% endfor %}
       {% endfor %}
     </div>
-    <div class="" id="zamena">
-      <a href="{% url 'view_changes' group_n.group %}">Просмотреть замены</a>
+    <div class="ssilki">
+      <div class="" id="zamena">
+        <a href="{% url 'view_changes' group_n.group %}">Просмотреть замены</a>
+      </div>
+      <div class="">
+        <a href="{% url 'raspis_tomorrow' group_n.group.pk %}">Просмотреть расписание на завтра</a>
+      </div>
+      <div class="">
+        <a href="{% url 'raspis_today' group_n.group.pk %}">Просмореть расписание на сегодня</a>
+      </div>
+      <div class="">
+        <a href="{% url 'home' %}">Вернуться к выбору группы</a>
+      </div>
     </div>
-    <div class="">
-      <a href="{% url 'raspis_tomorrow' group_n.group.pk %}">Просмотреть расписание на завтра</a>
-    </div>
-    <div class="">
-      <a href="{% url 'raspis_today' group_n.group.pk %}">Просмореть расписание на сегодня</a>
-    </div>
+
 
 
   </body>

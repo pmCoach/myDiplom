@@ -1,15 +1,17 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <link rel="stylesheet" href="{% static 'css/raspisanie.css' %}">
+    <title>{{group_name.group}}</title>
   </head>
   <body>
-    <h1>Здесь выведется ваше расписание на сегодня</h1>
-    <div class="raspis">
+    <center><h1>Ваше расписание на сегодня</h1>
+    <div class="raspis" style="float: none;">
       {% for para in raspis %}
 
-      <div class="para" style="border: 1px solid black">
+      <div class="para">
         <p>{{para.pair_number.pair_start}} - {{para.pair_number.pair_end}}</p>
         <p>{{para.discipline}}</p>
         <p>{{para.teacher}}</p>
@@ -17,12 +19,17 @@
       </div>
       {% endfor %}
       {% for para in dop_para %}
-      <div class="para" style="border: 1px solid black">
-        {% for word in para %}
-        <p>{{word}}</p>
-        {% endfor %}
+      <div class="para">
+        <p>{{para.pair_number.pair_start}} - {{para.pair_number.pair_end}}</p>
+        <p>{{para.discipline}}</p>
+        <p>{{para.teacher}}</p>
+        <p>{{para.auditory}}</p>
       </div>
       {% endfor %}
     </div>
+  </center>
+  <div class="ssilki">
+    <a href="{% url 'view_raspis' group_name.group.pk %}">Вернуться на страницу с парами</a>
+  </div>
   </body>
 </html>

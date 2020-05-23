@@ -1,13 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <link rel="stylesheet" href="{% static 'css/raspisanie.css' %}">
     <meta charset="utf-8">
-    <title></title>
+    <title>{{group.group}}</title>
   </head>
   <body>
-    <div class="raspis">
+    <center><h1>Страница с заменами</h1></center>
+    <center><div class="raspis" style="float: none">
       {% for para in zamena %}
-        <div class="para" style="border: 1px solid black">
+        <div class="para">
           <p>{{para.date_of_change}}</p>
           <p>{{para.discipline}}</p>
           <p>{{para.teacher}}</p>
@@ -16,6 +19,10 @@
         </div>
       {% endfor %}
     </div>
-    <a href="{% url 'view_raspis' group.group.pk %}">Вернуться на страницу с парами</a>
+  </center>
+    <div class="ssilki">
+      <a href="{% url 'view_raspis' group %}">Вернуться на страницу с парами</a>
+    </div>
+
   </body>
 </html>

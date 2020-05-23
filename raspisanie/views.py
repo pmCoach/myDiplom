@@ -57,7 +57,8 @@ def view_changes(request, gruppa):
             change.delete()
             print('Запись удалена')
     zamena = Changes.objects.filter(group=groups.kod_of_group)
-    group = zamena[0]
+    group = Group.objects.filter(group_name=gruppa)
+    group = group[0].pk
     return render(request, 'user_raspisanie/view_changes.html', {'zamena': zamena, 'group': group})
 
 
@@ -86,11 +87,10 @@ def raspis_today(request, pk):
         raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=True)
     zamena = Changes.objects.filter(group=groups.kod_of_group, date_of_change=date)
     check = False
-    dopoln_para = [[]]
-    pair_number = []
-    discipline = []
-    teacher = []
-    auditory = []
+    dopoln_para = []
+    group_name = Raspisanie.objects.filter(group=groups)
+    group_name = group_name[0]
+
     for para in raspis:
         for zam in zamena:
             if para.pair_number == zam.pair_number:
@@ -104,23 +104,16 @@ def raspis_today(request, pk):
                 check = True
                 break
         if check == False:
-            pair_number.append(zam.pair_number)
-            discipline.append(zam.discipline)
-            teacher.append(zam.teacher)
-            auditory.append(zam.auditory)
-    for i in range(len(pair_number)):
-        for j in range(len(discipline)):
-            dopoln_para[i].append(pair_number[i])
-            dopoln_para[i].append(discipline[i])
-            dopoln_para[i].append(teacher[i])
-            dopoln_para[i].append(auditory[i])
-    return render(request, 'user_raspisanie/raspis_today.html', {'raspis': raspis, 'dop_para': dopoln_para,})
+            dopoln_para.append(Raspisanie(day_of_week= para.day_of_week, parity = para.parity, obe_nedeli = para.obe_nedeli, discipline = zam.discipline, group = zam.group, pair_number = zam.pair_number, teacher = zam.teacher, auditory = zam.auditory))
+    return render(request, 'user_raspisanie/raspis_today.html', {'raspis': raspis, 'dop_para': dopoln_para, 'group_name': group_name,})
 
 
 
 def raspis_tom(request, pk):
     groups = get_object_or_404(Group, kod_of_group=pk)
     week_day = datetime.date.today().weekday()+2
+    if week_day > 7:
+        week_day = week_day - 7
     date = datetime.date.today()
     date += datetime.timedelta(days=1)
     chetnost = False
@@ -143,11 +136,9 @@ def raspis_tom(request, pk):
         raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=True)
     zamena = Changes.objects.filter(group=groups.kod_of_group, date_of_change=date)
     check = False
-    dopoln_para = [[]]
-    pair_number = []
-    discipline = []
-    teacher = []
-    auditory = []
+    dopoln_para = []
+    group_name = Raspisanie.objects.filter(group=groups)
+    group_name = group_name[0]
     for para in raspis:
         for zam in zamena:
             if para.pair_number == zam.pair_number:
@@ -161,14 +152,5 @@ def raspis_tom(request, pk):
                 check = True
                 break
         if check == False:
-            pair_number.append(zam.pair_number)
-            discipline.append(zam.discipline)
-            teacher.append(zam.teacher)
-            auditory.append(zam.auditory)
-    for i in range(len(pair_number)):
-        for j in range(len(discipline)):
-            dopoln_para[i].append(pair_number[i])
-            dopoln_para[i].append(discipline[i])
-            dopoln_para[i].append(teacher[i])
-            dopoln_para[i].append(auditory[i])
-    return render(request, 'user_raspisanie/raspis_tomorrow.html', {'raspis': raspis, 'dop_para': dopoln_para, 'chetnost': chetnost})
+            dopoln_para.append(Raspisanie(day_of_week= para.day_of_week, parity = para.parity, obe_nedeli = para.obe_nedeli, discipline = zam.discipline, group = zam.group, pair_number = zam.pair_number, teacher = zam.teacher, auditory = zam.auditory))
+    return render(request, 'user_raspisanie/raspis_tomorrow.html', {'raspis': raspis, 'dop_para': dopoln_para, 'chetnost': chetnost, 'group_name': group_name})
