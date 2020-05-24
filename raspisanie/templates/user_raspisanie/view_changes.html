@@ -4,7 +4,7 @@
   <head>
     <link rel="stylesheet" href="{% static 'css/raspisanie.css' %}">
     <meta charset="utf-8">
-    <title>{{group.group}}</title>
+    <title>{{group.group_name}}</title>
   </head>
   <body>
     <center><h1>Страница с заменами</h1></center>
@@ -15,13 +15,12 @@
           <p>{{para.discipline}}</p>
           <p>{{para.teacher}}</p>
           <p>{{para.pair_number.pair_start}} - {{para.pair_number.pair_end}}</p>
-          <p>{{para.group.pk}}</p>
         </div>
       {% endfor %}
     </div>
   </center>
     <div class="ssilki">
-      <a href="{% url 'view_raspis' group %}">Вернуться на страницу с парами</a>
+      <a href="{% url 'view_raspis' group.pk %}">Вернуться на страницу с парами</a>
     </div>
 
   </body>

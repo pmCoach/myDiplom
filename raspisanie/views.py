@@ -58,7 +58,7 @@ def view_changes(request, gruppa):
             print('Запись удалена')
     zamena = Changes.objects.filter(group=groups.kod_of_group)
     group = Group.objects.filter(group_name=gruppa)
-    group = group[0].pk
+    group = group[0]
     return render(request, 'user_raspisanie/view_changes.html', {'zamena': zamena, 'group': group})
 
 
