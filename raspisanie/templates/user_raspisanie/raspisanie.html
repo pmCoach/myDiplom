@@ -1,17 +1,21 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Здесь будет выводиться расписание занятий</title>
+    <link rel="stylesheet" href="{% static 'css/raspisanie.css' %}">
+    <title>Group</title>
   </head>
   <body>
-    <h2>Выберите из списка вашу группу</h2>
-    <div class="">
-          {% for group in groups %}
-            <br>
-            <a value="" href="{% url 'view_raspis' group.kod_of_group %}">{{ group.group_name }}</a>
-          {% endfor %}
-    </div>
+    <center><h1>Выберите из списка вашу группу</h1></center>
+    <center>
+      <div class="" style="width: 25%; margin-top: 5%;">
+        {% for group in groups %}
+          <a class="group" value="" href="{% url 'view_raspis' group.kod_of_group %}" style="margin: 5% 0 0 0; float: none; width: 100%;">{{ group.group_name }}</a>
+        {% endfor %}
+      </div>
+
+    </center>
 
 
 
