@@ -28,7 +28,7 @@ def time_para(pair_number):
     }
     return(list[pair_number])
 
-
+#Функция вызывает страницу с выбором группы
 def group_select(request):
 
     groups = Group.objects.order_by('group_name')
@@ -36,9 +36,10 @@ def group_select(request):
     return render(request, 'user_raspisanie/raspisanie.html', {'groups': groups})
 
 
-
+#Функция вызывает расписание занятий
 def view_raspis(request, pk):
     groups = get_object_or_404(Group, kod_of_group=pk)
+    #получаем строки расписания выбранной группы
     raspis = Raspisanie.objects.filter(group=groups.kod_of_group)
     group_name = raspis[0]
     week = Day_of_week.objects.filter()
@@ -47,10 +48,11 @@ def view_raspis(request, pk):
     return render(request, 'user_raspisanie/view_raspisanie.html', {'raspis': raspis, 'group_n': group_name, 'chetnoe': chetnoe, 'nechetnoe': nechetnoe, 'week': week,})
 
 
-
+#Функция позволяет вызвать просмотр замен
 def view_changes(request, gruppa):
     groups = get_object_or_404(Group, group_name=gruppa)
     date = datetime.date.today()
+    #Данный цикл позволяет удалить замену, если она уже не действительна
     for change in Changes.objects.filter(group=groups.kod_of_group):
         if change.date_of_change < date:
             print('Данная дата меньше сегодняшней', change.date_of_change)
@@ -62,20 +64,22 @@ def view_changes(request, gruppa):
     return render(request, 'user_raspisanie/view_changes.html', {'zamena': zamena, 'group': group})
 
 
-
+#Функция вызывает расписание на сегодняшний день
 def raspis_today(request, pk):
     groups = get_object_or_404(Group, kod_of_group=pk)
     week_day = datetime.date.today().weekday()+1
     date = datetime.date.today()
+    #Данный блок кода присваивает переменной значения расписания в завимости от четности недели
     chetnost = False
     start_sem = Start_semestr_date.objects.filter()
     start_semestr_date = start_sem[0].date.isocalendar()[1]
-    print(start_semestr_date)
+    #Если неделя начала семестра четная, то инвертируется
     if start_semestr_date % 2 == 0:
         if datetime.date.today().isocalendar()[1] % 2 == 1:
             chetnost = True
         else:
             chetnost = False
+    #Если неделя начала семестра нечетная, то ничего не меняется
     else:
         if datetime.daate.today().isocalendar()[1] % 2 == 1:
             chetnost = False
@@ -85,12 +89,14 @@ def raspis_today(request, pk):
         raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=False, obe_nedeli=False)
     else:
         raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=True)
+    #Ищет все замены на сегодня
     zamena = Changes.objects.filter(group=groups.kod_of_group, date_of_change=date)
     check = False
+    #Переменная для добавления записей с заменами
     dopoln_para = []
+    order_para = []
     group_name = Raspisanie.objects.filter(group=groups)
     group_name = group_name[0]
-
     for para in raspis:
         for zam in zamena:
             if para.pair_number == zam.pair_number:
@@ -105,7 +111,19 @@ def raspis_today(request, pk):
                 break
         if check == False:
             dopoln_para.append(Raspisanie(day_of_week= para.day_of_week, parity = para.parity, obe_nedeli = para.obe_nedeli, discipline = zam.discipline, group = zam.group, pair_number = zam.pair_number, teacher = zam.teacher, auditory = zam.auditory))
-    return render(request, 'user_raspisanie/raspis_today.html', {'raspis': raspis, 'dop_para': dopoln_para, 'group_name': group_name,})
+
+    for para in dopoln_para:
+        for check_para in raspis:
+            if para.pair_number.pair_number < check_para.pair_number.pair_number:
+                order_para.append(para)
+                break
+
+    for para in raspis:
+        order_para.append(para)
+    for para in dopoln_para:
+        if para.pair_number.pair_number > raspis[len(raspis)-1].pair_number.pair_number:
+            order_para.append(para)
+    return render(request, 'user_raspisanie/raspis_today.html', {'raspis': order_para, 'group_name': group_name,})
 
 
 
@@ -115,16 +133,19 @@ def raspis_tom(request, pk):
     if week_day > 7:
         week_day = week_day - 7
     date = datetime.date.today()
+    #Данный блок кода присваивает переменной значения расписания в завимости от четности недели
     date += datetime.timedelta(days=1)
     chetnost = False
     start_sem = Start_semestr_date.objects.filter()
     start_semestr_date = start_sem[0].date.isocalendar()[1]
     print(start_semestr_date)
+    #Если неделя начала семестра четная, то инвертируется
     if start_semestr_date % 2 == 0:
         if datetime.date.today().isocalendar()[1] % 2 == 1:
             chetnost = True
         else:
             chetnost = False
+    #Если неделя начала семестра нечетная, то ничего не меняется
     else:
         if datetime.daate.today().isocalendar()[1] % 2 == 1:
             chetnost = False
@@ -134,9 +155,13 @@ def raspis_tom(request, pk):
         raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=False, obe_nedeli=False)
     else:
         raspis = Raspisanie.objects.filter(group=groups.kod_of_group, day_of_week=week_day).exclude(parity=True)
+        #Ищет все замены на завтра
     zamena = Changes.objects.filter(group=groups.kod_of_group, date_of_change=date)
     check = False
+    #Переменная для добавления записей с заменами
     dopoln_para = []
+    #Переменная используется для сортировки пар
+    order_para = []
     group_name = Raspisanie.objects.filter(group=groups)
     group_name = group_name[0]
     for para in raspis:
@@ -153,4 +178,17 @@ def raspis_tom(request, pk):
                 break
         if check == False:
             dopoln_para.append(Raspisanie(day_of_week= para.day_of_week, parity = para.parity, obe_nedeli = para.obe_nedeli, discipline = zam.discipline, group = zam.group, pair_number = zam.pair_number, teacher = zam.teacher, auditory = zam.auditory))
-    return render(request, 'user_raspisanie/raspis_tomorrow.html', {'raspis': raspis, 'dop_para': dopoln_para, 'chetnost': chetnost, 'group_name': group_name})
+
+    for para in dopoln_para:
+        for check_para in raspis:
+            if para.pair_number.pair_number < check_para.pair_number.pair_number:
+                order_para.append(para)
+                break
+
+    for para in raspis:
+        order_para.append(para)
+    for para in dopoln_para:
+        if para.pair_number.pair_number > raspis[len(raspis)-1].pair_number.pair_number:
+            order_para.append(para)
+
+    return render(request, 'user_raspisanie/raspis_tomorrow.html', {'raspis': order_para, 'dop_para': dopoln_para, 'chetnost': chetnost, 'group_name': group_name})

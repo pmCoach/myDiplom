@@ -31,6 +31,14 @@ h1{
   padding: 5%;
 }
 
+.para:hover{
+  background-color: rgba(200, 200, 200, 0.8);
+  margin-bottom: 1%;
+  border-radius: 14px;
+  font-size: 22px;
+  padding: 5%;
+}
+
 .para p {
   margin: 0 0 0 5%;
 }
