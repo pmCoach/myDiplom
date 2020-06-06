@@ -55,9 +55,7 @@ def view_changes(request, gruppa):
     #Данный цикл позволяет удалить замену, если она уже не действительна
     for change in Changes.objects.filter(group=groups.kod_of_group):
         if change.date_of_change < date:
-            print('Данная дата меньше сегодняшней', change.date_of_change)
             change.delete()
-            print('Запись удалена')
     zamena = Changes.objects.filter(group=groups.kod_of_group)
     group = Group.objects.filter(group_name=gruppa)
     group = group[0]
@@ -93,6 +91,7 @@ def raspis_today(request, pk):
     zamena = Changes.objects.filter(group=groups.kod_of_group, date_of_change=date)
     check = False
     #Переменная для добавления записей с заменами
+    chetn = chetnost?''
     dopoln_para = []
     order_para = []
     group_name = Raspisanie.objects.filter(group=groups)
@@ -109,9 +108,11 @@ def raspis_today(request, pk):
             if para.pair_number == zam.pair_number:
                 check = True
                 break
-        if check == False:
-            dopoln_para.append(Raspisanie(day_of_week= para.day_of_week, parity = para.parity, obe_nedeli = para.obe_nedeli, discipline = zam.discipline, group = zam.group, pair_number = zam.pair_number, teacher = zam.teacher, auditory = zam.auditory))
-
+        try:
+            if check == False:
+                dopoln_para.append(Raspisanie(day_of_week= para.day_of_week, parity = para.parity, obe_nedeli = para.obe_nedeli, discipline = zam.discipline, group = zam.group, pair_number = zam.pair_number, teacher = zam.teacher, auditory = zam.auditory))
+        except:
+            print("Ошибка")
     for para in dopoln_para:
         for check_para in raspis:
             if para.pair_number.pair_number < check_para.pair_number.pair_number:
@@ -176,8 +177,11 @@ def raspis_tom(request, pk):
             if para.pair_number == zam.pair_number:
                 check = True
                 break
-        if check == False:
-            dopoln_para.append(Raspisanie(day_of_week= para.day_of_week, parity = para.parity, obe_nedeli = para.obe_nedeli, discipline = zam.discipline, group = zam.group, pair_number = zam.pair_number, teacher = zam.teacher, auditory = zam.auditory))
+        try:
+            if check == False:
+                dopoln_para.append(Raspisanie(day_of_week= para.day_of_week, parity = para.parity, obe_nedeli = para.obe_nedeli, discipline = zam.discipline, group = zam.group, pair_number = zam.pair_number, teacher = zam.teacher, auditory = zam.auditory))
+        except:
+            print("Ошибка")
 
     for para in dopoln_para:
         for check_para in raspis:
@@ -190,5 +194,4 @@ def raspis_tom(request, pk):
     for para in dopoln_para:
         if para.pair_number.pair_number > raspis[len(raspis)-1].pair_number.pair_number:
             order_para.append(para)
-
     return render(request, 'user_raspisanie/raspis_tomorrow.html', {'raspis': order_para, 'dop_para': dopoln_para, 'chetnost': chetnost, 'group_name': group_name})
